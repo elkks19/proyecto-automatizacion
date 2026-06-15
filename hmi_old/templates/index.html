@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detector YOLO</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v={{ static_version }}">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <div>
+          <span class="eyebrow">Inspeccion visual</span>
+          <h1>Detector YOLO en vivo</h1>
+          <p>{{ model_path }}</p>
+        </div>
+        <div class="status" id="status">Listo</div>
+      </section>
+
+      <section class="workspace">
+        <section class="results">
+          <div class="scan-layout">
+            <article class="image-panel live-panel">
+              <header>
+                <span>Deteccion en tiempo real</span>
+                <span id="summary">0 objetos</span>
+              </header>
+              <div class="camera-stage">
+                <video id="video" class="source-video" autoplay playsinline muted></video>
+                <canvas id="liveOverlay"></canvas>
+              </div>
+              <img id="outputPreview" alt="">
+              <div class="empty" id="outputEmpty">Camara inactiva</div>
+            </article>
+
+            <aside class="side-stack">
+              <article class="live-state" id="liveState">No detecta nada</article>
+
+              <aside class="chart-panel">
+                <header>
+                  <h2>Distribucion</h2>
+                  <span id="chartTotal">0 total</span>
+                </header>
+                <div class="chart-wrap">
+                  <canvas id="detectionsChart" width="260" height="260"></canvas>
+                  <div class="chart-empty" id="chartEmpty">Sin detecciones</div>
+                </div>
+                <div class="legend" id="chartLegend"></div>
+              </aside>
+            </aside>
+          </div>
+
+          <article class="mqtt-panel">
+            <header>
+              <h2>Proceso MQTT</h2>
+              <span id="mqttState">Desconectado</span>
+            </header>
+            <div class="mqtt-sections">
+              <section class="mqtt-section">
+                <div class="mqtt-section-head">
+                  <h3>Componentes de trabajo</h3>
+                  <p>Estado operativo de la linea.</p>
+                </div>
+                <div class="machine-visual" id="machineVisual">
+                  <div class="machine-status-row">
+                    <span id="machineBandaState">Banda detenida</span>
+                    <span id="machineCarruselState">Carrusel detenido</span>
+                    <span id="machineSensorState">Sensores sin actividad</span>
+                  </div>
+                  <div class="machine-stage">
+                    <div class="conveyor" id="machineConveyor">
+                      <div class="belt-lines"></div>
+                      <div class="bottle-on-belt"></div>
+                    </div>
+                    <div class="sensor-rail">
+                      <span class="sensor-dot" id="machineSensorBottle"></span>
+                      <span class="sensor-dot" id="machineSensorBase"></span>
+                      <span class="sensor-dot" id="machineSensorProcess"></span>
+                    </div>
+                    <div class="carousel-unit" id="machineCarousel">
+                      <div class="carousel-disc">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                      <div class="carousel-base"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mqtt-grid mqtt-grid-components">
+                  <div class="mqtt-item">
+                    <span>Estado general</span>
+                    <strong id="mqttEstado">Sin datos</strong>
+                    <p id="mqttEstadoDetalle">Esperando mensaje.</p>
+                  </div>
+                  <div class="mqtt-item">
+                    <span>Motor banda</span>
+                    <strong id="mqttMotorBanda">Sin datos</strong>
+                    <p id="mqttMotorBandaDetalle">Esperando mensaje.</p>
+                  </div>
+                  <div class="mqtt-item">
+                    <span>Motor carrusel</span>
+                    <strong id="mqttMotorCarrusel">Sin datos</strong>
+                    <p id="mqttMotorCarruselDetalle">Esperando mensaje.</p>
+                  </div>
+                  <div class="mqtt-item mqtt-item-wide">
+                    <span>Estado de sensores</span>
+                    <strong id="mqttSensores">Sin datos</strong>
+                    <p id="mqttSensoresDetalle">Esperando mensaje.</p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="mqtt-section">
+                <div class="mqtt-section-head">
+                  <h3>Datos recopilados</h3>
+                  <p>Lecturas, resultados y eventos recibidos.</p>
+                </div>
+                <div class="mqtt-grid mqtt-grid-data">
+                  <div class="mqtt-item">
+                    <span>Alcohol</span>
+                    <strong id="mqttAlcohol">3.0 grados</strong>
+                    <p id="mqttAlcoholDetalle">Lectura simulada.</p>
+                  </div>
+                  <div class="mqtt-item">
+                    <span>IA</span>
+                    <strong id="mqttIa">Sin datos</strong>
+                    <p id="mqttIaDetalle">Esperando mensaje.</p>
+                  </div>
+                  <div class="mqtt-item mqtt-item-wide">
+                    <span>Ultimo evento</span>
+                    <strong id="mqttEvento">Sin datos</strong>
+                    <p id="mqttEventoDetalle">Esperando mensaje.</p>
+                  </div>
+                  <div class="mqtt-trend-card">
+                    <div class="mqtt-trend-head">
+                      <div>
+                        <span>Tendencia alcohol</span>
+                        <strong id="alcoholTrendValue">3.0 grados</strong>
+                      </div>
+                      <p id="alcoholTrendRange">Ultimos 60 puntos</p>
+                    </div>
+                    <canvas id="alcoholTrendChart" width="720" height="210"></canvas>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </article>
+
+          <div class="inspection-layout">
+            <article class="seal-panel">
+              <header>
+                <h2>Lectura de sello</h2>
+                <span id="sealBadge">Pendiente</span>
+              </header>
+              <div class="seal-grid">
+                <div class="seal-item">
+                  <span>QR</span>
+                  <strong id="qrStatus">Sin lectura</strong>
+                  <a id="qrLink" href="#" target="_blank" rel="noopener">Sin enlace detectado</a>
+                </div>
+                <div class="seal-item">
+                  <span>Serie numerica</span>
+                  <strong id="seriesValue">Sin lectura</strong>
+                  <p id="ocrStatus">Esperando imagen.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="table-panel">
+              <header>
+                <h2>Detalle de detecciones</h2>
+              </header>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Objeto</th>
+                      <th>Confianza</th>
+                      <th>Coordenadas</th>
+                    </tr>
+                  </thead>
+                  <tbody id="detectionsBody">
+                    <tr><td colspan="3">Sin resultados todavia.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <aside class="panel controls">
+          <div class="control-group">
+            <div class="group-title">
+              <h2>Control</h2>
+            </div>
+
+            <div class="button-row">
+              <button id="detectLive" type="button">Detectar</button>
+              <button id="stopLive" type="button" class="secondary">Detener</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="field">
+              <div class="field-head">
+                <label for="confidence">Confianza minima</label>
+                <strong id="confidenceValue">{{ confidence }}</strong>
+              </div>
+              <input id="confidence" type="range" min="0.1" max="0.9" value="{{ confidence }}" step="0.05">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="group-title">
+              <h2>Foto de prueba</h2>
+            </div>
+            <label class="file-picker" for="testImage">
+              <span id="testImageName">Elegir imagen</span>
+              <input id="testImage" type="file" accept="image/*">
+            </label>
+            <button id="detectImage" type="button" class="secondary">Analizar foto</button>
+          </div>
+
+          <div class="control-group mqtt-controls">
+            <div class="group-title">
+              <h2>MQTT</h2>
+              <span id="mqttStatusDot" class="mqtt-dot"></span>
+            </div>
+            <p id="mqttBroker">Broker pendiente</p>
+            <div class="pushbutton-row">
+              <button type="button" class="pushbutton pushbutton-start" data-command="iniciar">
+                <span></span>
+                <strong>Marcha</strong>
+              </button>
+              <button type="button" class="pushbutton pushbutton-stop" data-command="detener">
+                <span></span>
+                <strong>Parada</strong>
+              </button>
+            </div>
+            <div class="command-grid">
+              <button type="button" class="secondary" data-command="pausar">Pausar</button>
+              <button type="button" class="secondary" data-command="reanudar">Reanudar</button>
+              <button type="button" class="secondary" data-command="reset">Reset</button>
+            </div>
+          </div>
+
+          <div class="control-group classes">
+            <div class="group-title">
+              <h2>Etiquetas</h2>
+            </div>
+            <div class="chips">
+              {% for label in labels %}
+                <span>{{ label }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}?v={{ static_version }}"></script>
+  </body>
+</html>

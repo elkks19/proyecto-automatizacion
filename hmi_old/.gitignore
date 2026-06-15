@@ -1,0 +1,28 @@
+# Python cache/runtime files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local Python environments
+.venv/
+venv/
+env/
+.env
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Local YOLO/Ultralytics config and generated outputs
+.ultralytics/
+runs/
+
+# Keep files directly inside testeo/, but ignore every folder inside it.
+testeo/*/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Data augmentation folder
+dataugmentation/

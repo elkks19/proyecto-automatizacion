@@ -1,0 +1,45 @@
+.pio/
+.pioenvs/
+.piolibdeps/
+.clang_complete
+.gcc-flags.json
+.ccls
+compile_commands.json
+
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# HMI runtime
+hmi/hmi_eventos.sqlite3
+hmi/*.sqlite3
+hmi/.ultralytics/
+mosquitto-data/
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+*.out.log
+*.err.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Build artifacts
+build/
+dist/

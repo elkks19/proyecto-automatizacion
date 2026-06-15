@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Explorador Cheve</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">Estados del sistema</span>
+          <h1>Explorador Cheve</h1>
+          <nav class="navbar" aria-label="Navegacion principal">
+            <a class="nav-item" href="/">Proceso</a>
+            <a class="nav-item active" href="/explorer">Explorador</a>
+          </nav>
+        </div>
+        <div class="connection" id="mqttConnection">
+          <span class="dot"></span>
+          <strong>MQTT desconectado</strong>
+          <small id="brokerLabel">cheve</small>
+        </div>
+      </header>
+
+      <section class="explorer-panel">
+        <header>
+          <h2>Explorador de estados</h2>
+          <span>Estado actual del sistema</span>
+        </header>
+        <div class="state-tree">
+          <div class="tree-group">
+            <div class="tree-folder">conexion</div>
+            <div class="tree-row"><span>mqtt</span><strong id="explorerMqtt">desconectado</strong></div>
+          </div>
+          <div class="tree-group">
+            <div class="tree-folder">actuadores</div>
+            <div class="tree-row"><span>banda</span><strong id="explorerBanda">detenida</strong></div>
+            <div class="tree-row"><span>giro_botella</span><strong id="explorerGiro">detenido</strong></div>
+          </div>
+          <div class="tree-group">
+            <div class="tree-folder">sensores_infrarrojos</div>
+            <div class="tree-row"><span>inicio</span><strong id="explorerInicio">libre</strong></div>
+            <div class="tree-row"><span>fin</span><strong id="explorerFin">libre</strong></div>
+          </div>
+          <div class="tree-group">
+            <div class="tree-folder">sensores_mq4</div>
+            <div class="tree-row"><span>mq4_1</span><strong id="explorerMq4One">-- ppm</strong></div>
+            <div class="tree-row"><span>mq4_2</span><strong id="explorerMq4Two">-- ppm</strong></div>
+          </div>
+          <div class="tree-group">
+            <div class="tree-folder">modelo_yolo</div>
+            <div class="tree-row"><span>estado</span><strong id="explorerModelo">detenido</strong></div>
+            <div class="tree-row"><span>qr</span><strong id="explorerQr">no detectado</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="timeline-panel">
+        <header>
+          <h2>Linea de tiempo</h2>
+          <span id="eventCount">0</span>
+        </header>
+        <div class="timeline-track" id="timelineTrack"></div>
+      </section>
+    </main>
+
+    <script src="/static/explorer.js"></script>
+  </body>
+</html>

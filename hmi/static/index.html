@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HMI Cheve</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">HMI de automatizacion</span>
+          <h1>Linea Cheve</h1>
+          <nav class="navbar" aria-label="Navegacion principal">
+            <a class="nav-item active" href="/">Proceso</a>
+            <a class="nav-item" href="/explorer">Explorador</a>
+          </nav>
+        </div>
+        <div class="connection" id="mqttConnection">
+          <span class="dot"></span>
+          <strong>MQTT desconectado</strong>
+          <small id="brokerLabel">cheve</small>
+        </div>
+      </header>
+
+      <section class="process">
+        <div class="station sensor-station" id="inicioStation">
+          <span class="station-label">IR Inicio</span>
+          <div class="sensor-beam"></div>
+          <strong id="inicioState">Libre</strong>
+        </div>
+
+        <div class="line">
+          <div class="alcohol-rig">
+            <div class="mq4-head" id="mq4OneHead">
+              <span>MQ4 A</span>
+              <strong id="mq4OneValue">-- ppm</strong>
+            </div>
+            <div class="mq4-head" id="mq4TwoHead">
+              <span>MQ4 B</span>
+              <strong id="mq4TwoValue">-- ppm</strong>
+            </div>
+          </div>
+          <div class="vision-window" id="modelWindow">
+            <header>
+              <div>
+                <span>Vision YOLO</span>
+                <strong id="modelStatus">Detenido</strong>
+              </div>
+              <div class="vision-actions">
+                <button type="button" id="startModelButton">Iniciar</button>
+                <button type="button" id="stopModelButton">Detener</button>
+              </div>
+            </header>
+            <div class="vision-frame">
+              <img id="modelFrame" alt="Camara del modelo">
+              <span id="modelPlaceholder">Sin camara</span>
+            </div>
+            <div class="vision-detections" id="modelDetections">Esperando lectura</div>
+          </div>
+          <div class="transport-zone">
+            <div class="belt" id="belt">
+              <div class="belt-stripes"></div>
+            </div>
+            <div class="turntable-station" id="turntableStation">
+              <span class="turntable-label">Base de giro</span>
+              <div class="turntable">
+                <span class="turntable-rim"></span>
+                <span class="turntable-hub"></span>
+              </div>
+              <div class="turntable-motor">
+                <span></span>
+                <strong>Motor giro</strong>
+              </div>
+            </div>
+            <div class="bottle" id="bottle">
+              <span class="bottle-shadow"></span>
+              <span class="bottle-sprite">
+                <span class="bottle-glass"></span>
+                <span class="bottle-shine"></span>
+                <span class="bottle-label"></span>
+              </span>
+            </div>
+          </div>
+          <div class="motor-block" id="motorBlock">
+            <div class="motor-core"></div>
+            <span>Motor paso a paso</span>
+          </div>
+        </div>
+
+        <div class="station sensor-station" id="finStation">
+          <span class="station-label">IR Fin</span>
+          <div class="sensor-beam"></div>
+          <strong id="finState">Libre</strong>
+        </div>
+      </section>
+
+      <section class="events-panel">
+        <header>
+          <h2>Eventos recibidos</h2>
+          <span id="eventCount">0</span>
+        </header>
+        <div class="events-list" id="eventsList"></div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

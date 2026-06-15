@@ -1,0 +1,21 @@
+name: captura-imagenes
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - opencv=4.8
+  - jupyter
+  - ipykernel
+  - numpy
+  - matplotlib
+  - flask
+  - pytesseract
+  - tesseract
+  - pip
+  - pip:
+    - ultralytics
+    - onnxruntime
+    - paho-mqtt
+    - torch
+    - torchvision
