@@ -14,7 +14,7 @@ tasks:
   hmi:test:
     desc: Probar el HMI con eventos MQTT simulados
     cmds:
-      - python test/simular_eventos_mqtt.py --host 127.0.0.1 --topic cheve --pause 2 ciclo
+      - python test/simular_eventos_mqtt.py --host 127.0.0.1 --topic cheve --pause 1 ciclo
 
   hmi:run:
     desc: Ejecutar el HMI
